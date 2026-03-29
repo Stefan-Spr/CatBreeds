@@ -1,6 +1,7 @@
 package com.example.catbreeds.datasource.api
 
 import com.example.catbreeds.datasource.entity.CatBreedEntity
+import com.example.catbreeds.datasource.entity.CatBreedOverViewEntity
 import com.example.catbreeds.datasource.entity.CatImageEntity
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -11,7 +12,7 @@ interface CatApiService {
     suspend fun getBreeds(
         @Query("limit") limit: Int,
         @Query("page") page: Int
-    ): List<CatBreedEntity>
+    ): List<CatBreedOverViewEntity>
 
     @GET("breeds/{breed_id}")
     suspend fun getBreedById(

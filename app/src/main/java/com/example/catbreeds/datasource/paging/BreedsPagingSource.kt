@@ -3,14 +3,14 @@ package com.example.catbreeds.datasource.paging
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.example.catbreeds.datasource.api.CatApiService
-import com.example.catbreeds.datasource.entity.CatBreedEntity
+import com.example.catbreeds.datasource.entity.CatBreedOverViewEntity
 
 class BreedsPagingSource(
     private val api: CatApiService
-) : PagingSource<Int, CatBreedEntity>() {
+) : PagingSource<Int, CatBreedOverViewEntity>() {
 
     @Suppress("TooGenericExceptionCaught")
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, CatBreedEntity> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, CatBreedOverViewEntity> {
         return try {
             val page = params.key ?: 0
             val limit = params.loadSize
@@ -31,7 +31,7 @@ class BreedsPagingSource(
         }
     }
 
-    override fun getRefreshKey(state: PagingState<Int, CatBreedEntity>): Int? {
+    override fun getRefreshKey(state: PagingState<Int, CatBreedOverViewEntity>): Int? {
         return state.anchorPosition?.let { position ->
             val page = state.closestPageToPosition(position)
             page?.prevKey?.plus(1) ?: page?.nextKey?.minus(1)

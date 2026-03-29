@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.example.catbreeds.presentation.navigation.CatBreedDetailsRoute
 import com.example.catbreeds.presentation.navigation.CatBreedsOverViewRoute
 import com.example.catbreeds.presentation.ui.screen.BreedDetailScreen
@@ -41,8 +42,12 @@ class CatBreedsActivity : ComponentActivity() {
                                 },
                             )
                         }
-                        composable<CatBreedDetailsRoute> {
-                            BreedDetailScreen(modifier = Modifier.padding(innerPadding),
+                        composable<CatBreedDetailsRoute> { navBackStackEntry ->
+                            val breedDetailRoute: CatBreedDetailsRoute = navBackStackEntry.toRoute()
+                            BreedDetailScreen(
+                                breedId = breedDetailRoute.id,
+                                viewModel = viewModel,
+                                modifier = Modifier.padding(innerPadding),
                                 onBackClick = { navController.popBackStack() }
                             )
                         }

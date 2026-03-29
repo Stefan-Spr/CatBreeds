@@ -5,6 +5,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.example.catbreeds.datasource.api.CatApiService
 import com.example.catbreeds.datasource.entity.CatBreedEntity
+import com.example.catbreeds.datasource.entity.CatBreedOverViewEntity
 import com.example.catbreeds.datasource.entity.CatImageEntity
 import com.example.catbreeds.datasource.paging.BreedsPagingSource
 import com.example.catbreeds.datasource.paging.ImagesPagingSource
@@ -14,7 +15,7 @@ import javax.inject.Inject
 class CatRepository @Inject constructor(
     private val api: CatApiService
 ) {
-    fun getBreedsPager(): Flow<PagingData<CatBreedEntity>> {
+    fun getBreedsPager(): Flow<PagingData<CatBreedOverViewEntity>> {
         return Pager(
             config = PagingConfig(
                 pageSize = 20,
