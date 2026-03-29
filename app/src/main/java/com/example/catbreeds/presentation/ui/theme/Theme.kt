@@ -1,4 +1,4 @@
-package com.example.catbreeds.ui.theme
+package com.example.catbreeds.presentation.ui.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
