@@ -103,6 +103,8 @@ dependencies {
     implementation(libs.okhttp.logging)
     implementation(libs.paging.runtime)
     implementation(libs.paging.compose)
+    implementation(libs.coil.compose)
+    implementation(libs.compose.foundation)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

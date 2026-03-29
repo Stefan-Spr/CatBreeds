@@ -8,5 +8,4 @@ data class CatBreedEntity(
     val temperament: String,
     val description: String,
     val life_span: String,
-    val image: CatImageEntity?,
 )

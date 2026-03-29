@@ -13,6 +13,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.catbreeds.R
 import com.example.catbreeds.presentation.CatBreedsViewModel
 
@@ -29,6 +30,7 @@ fun BreedDetailScreen(
     }
 
     val catBreedState by viewModel.catBreedDetailState.collectAsState()
+    val catImages = viewModel.getImages(breedId).collectAsLazyPagingItems()
 
     LaunchedEffect(breedId) {
         viewModel.getBreedDetails(breedId)
@@ -38,7 +40,7 @@ fun BreedDetailScreen(
         modifier = modifier
     ) {
         catBreedState?.let { catBreed ->
-            CatBreedDetailCard(catBreed)
+            CatBreedDetailCard(catBreed, catImages)
         } ?: Text(stringResource(R.string.cat_breed_detail_screen_error_lb))
     }
 }
