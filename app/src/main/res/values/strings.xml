@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">CatBreeds</string>
+    <string name="cat_breeds_over_view_screen_title_lb">Cat Breeds</string>
+    <string name="cat_breed_detail_screen_origin_lb">Origin</string>
+    <string name="cat_breed_detail_screen_temperament_lb">Temperament</string>
+    <string name="cat_breed_detail_screen_description_lb">Description</string>
+    <string name="cat_breed_detail_screen_life_span_lb">Life Span</string>
+    <string name="cat_breed_detail_screen_error_lb">Could not load breed details</string>
 </resources>
