@@ -10,19 +10,26 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.example.catbreeds.R
 import com.example.catbreeds.presentation.ui.states.CatBreedOverViewState
 
 @Composable
 fun BreedOverViewComponent(
     breed: CatBreedOverViewState,
     onBreedClick: (String) -> Unit,
+    modifier: Modifier = Modifier
 ) {
+    val cardTag = stringResource(R.string.test_tag_breed_card_prefix) + breed.id
     Card(
         onClick = { onBreedClick(breed.id) },
-        modifier = Modifier.width(300.dp),
+        modifier = modifier
+            .width(300.dp)
+            .testTag(cardTag),
     ) {
         Column {
             Text(
@@ -34,11 +41,10 @@ fun BreedOverViewComponent(
 
             AsyncImage(
                 model = breed.imageUrl,
-                contentDescription = null,
+                contentDescription = "Image of ${breed.name}",
                 contentScale = ContentScale.FillWidth,
                 modifier = Modifier
                     .fillMaxWidth()
-                // TODO add placeholder = painterResource(R.drawable.placeholder)
             )
         }
     }

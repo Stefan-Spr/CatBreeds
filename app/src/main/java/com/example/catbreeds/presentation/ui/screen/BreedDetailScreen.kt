@@ -12,6 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.catbreeds.R
@@ -37,7 +38,7 @@ fun BreedDetailScreen(
     }
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
+        modifier = modifier.testTag(stringResource(R.string.test_tag_breed_detail_screen))
     ) {
         catBreedState?.let { catBreed ->
             CatBreedDetailCard(catBreed, catImages)

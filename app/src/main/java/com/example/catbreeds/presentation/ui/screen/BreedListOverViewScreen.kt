@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -21,7 +22,7 @@ fun BreedListOverViewScreen(
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
+        modifier = modifier.testTag(stringResource(R.string.test_tag_breed_list))
     ) {
         HeaderComponent(text = stringResource(R.string.cat_breeds_over_view_screen_title_lb))
         val breeds = viewModel.breeds.collectAsLazyPagingItems()

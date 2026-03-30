@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+    <string name="test_tag_breed_list" translatable="false">breed_list</string>
+    <string name="test_tag_breed_card_prefix" translatable="false">breed_card_</string>
+    <string name="test_tag_breed_detail_screen" translatable="false">breed_detail_screen</string>
+</resources>
