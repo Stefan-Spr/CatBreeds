@@ -24,6 +24,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -55,7 +56,7 @@ fun BreedImageSearchScreen(
         onQueryChange = viewModel::onQueryChanged,
         onSuggestionClick = viewModel::onSuggestionClicked,
         onBackClick = onBackClick,
-        modifier = modifier
+        modifier = modifier.testTag(stringResource(R.string.test_tag_search_screen))
     )
 }
 
@@ -111,7 +112,8 @@ fun CatSearchBar(
                         contentDescription = null,
                         modifier = Modifier.size(25.dp)
                     )
-                }
+                },
+                modifier = Modifier.testTag(stringResource(R.string.test_tag_search_bar))
             )
         },
         expanded = isExpanded,

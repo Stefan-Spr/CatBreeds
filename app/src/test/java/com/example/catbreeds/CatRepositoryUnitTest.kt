@@ -2,6 +2,7 @@ package com.example.catbreeds
 
 import com.example.catbreeds.datasource.CatRepository
 import com.example.catbreeds.datasource.api.CatApiService
+import com.example.catbreeds.datasource.database.BreedDao
 import com.example.catbreeds.datasource.entity.CatBreedEntity
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -16,12 +17,15 @@ class CatRepositoryUnitTest {
     @Mock
     private lateinit var apiService: CatApiService
 
+    @Mock
+    private lateinit var breedDao: BreedDao
+
     private lateinit var repository: CatRepository
 
     @Before
     fun setup() {
         MockitoAnnotations.openMocks(this)
-        repository = CatRepository(apiService)
+        repository = CatRepository(apiService, breedDao)
     }
 
     @Test
