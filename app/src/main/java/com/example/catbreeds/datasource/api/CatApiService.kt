@@ -10,8 +10,6 @@ import retrofit2.http.Query
 interface CatApiService {
     @GET("breeds")
     suspend fun getBreeds(
-        @Query("limit") limit: Int,
-        @Query("page") page: Int
     ): List<CatBreedOverViewEntity>
 
     @GET("breeds/{breed_id}")
@@ -19,15 +17,13 @@ interface CatApiService {
         @Path("breed_id") breedId: String
     ): CatBreedEntity
 
-    @GET("images/{referenceId}")
-    suspend fun getImageByID(
-        @Path("referenceId") id: String
-    ): CatImageEntity
-
-
+    @Suppress("LongParameterList")
     @GET("images/search")
-    suspend fun getImagesByBreed(
-        @Query("breed_ids") breedId: String,
+    suspend fun searchImages(
+        @Query("breed_ids") breedId: String? = null,
+        @Query("category_ids") categoryId: Int? = null,
+        @Query("mime_types") mimeTypes: String? = null,
+        @Query("order") order: String? = null,
         @Query("limit") limit: Int,
         @Query("page") page: Int
     ): List<CatImageEntity>

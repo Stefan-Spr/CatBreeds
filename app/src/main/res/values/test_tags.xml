@@ -3,4 +3,7 @@
     <string name="test_tag_breed_list" translatable="false">breed_list</string>
     <string name="test_tag_breed_card_prefix" translatable="false">breed_card_</string>
     <string name="test_tag_breed_detail_screen" translatable="false">breed_detail_screen</string>
+    <string name="test_tag_search_screen" translatable="false">search_screen</string>
+    <string name="test_tag_search_bar" translatable="false">search_bar</string>
+    <string name="test_tag_search_button" translatable="false">search_button</string>
 </resources>

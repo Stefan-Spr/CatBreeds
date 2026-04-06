@@ -15,7 +15,9 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.example.catbreeds.presentation.navigation.CatBreedDetailsRoute
 import com.example.catbreeds.presentation.navigation.CatBreedsOverViewRoute
+import com.example.catbreeds.presentation.navigation.ImageSearchRoute
 import com.example.catbreeds.presentation.ui.screen.BreedDetailScreen
+import com.example.catbreeds.presentation.ui.screen.BreedImageSearchScreen
 import com.example.catbreeds.presentation.ui.screen.BreedListOverViewScreen
 import com.example.catbreeds.presentation.ui.theme.CatBreedsTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -40,6 +42,9 @@ class CatBreedsActivity : ComponentActivity() {
                                 navigateToDetailScreen = { breedId ->
                                     navController.navigate(CatBreedDetailsRoute(breedId))
                                 },
+                                navigateToSearchScreen = {
+                                    navController.navigate(ImageSearchRoute)
+                                }
                             )
                         }
                         composable<CatBreedDetailsRoute> { navBackStackEntry ->
@@ -49,6 +54,13 @@ class CatBreedsActivity : ComponentActivity() {
                                 viewModel = viewModel,
                                 modifier = Modifier.padding(innerPadding),
                                 onBackClick = { navController.popBackStack() }
+                            )
+                        }
+                        composable<ImageSearchRoute> {
+                            BreedImageSearchScreen(
+                                viewModel = viewModel,
+                                modifier = Modifier.padding(innerPadding),
+                                onBackClick = { navController.popBackStack() },
                             )
                         }
                     }

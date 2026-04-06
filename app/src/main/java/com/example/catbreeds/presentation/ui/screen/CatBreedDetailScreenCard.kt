@@ -28,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -50,7 +51,10 @@ fun CatBreedDetailCard(catBreed: CatBreedDetailState,
                        images: LazyPagingItems<CatImageEntity>
 ) {
     Card() {
-        Column() {
+        Column(
+            modifier = Modifier
+                .padding(16.dp)
+        ) {
             Text(catBreed.name,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth())
@@ -91,7 +95,7 @@ fun CatBreedImagesPager(
 
     Box(modifier = modifier) {
         if (images.itemCount == 0 && images.loadState.refresh !is LoadState.Loading) {
-            ImagePlaceholder(text = "No images available")
+            ImagePlaceholder(text = stringResource(R.string.cat_breed_detail_screen_error_no_images_lb))
         } else {
             Column(
                 modifier = Modifier.fillMaxWidth(),
@@ -116,7 +120,7 @@ fun CatBreedImagesPager(
                                 contentDescription = null,
                                 contentScale = ContentScale.FillHeight,
                                 modifier = Modifier.fillMaxHeight(),
-                                //error = painterResource(R.drawable.ic_broken_image)
+                                error = painterResource(R.drawable.catplaceholder)
                             )
                         }
                     } else {
