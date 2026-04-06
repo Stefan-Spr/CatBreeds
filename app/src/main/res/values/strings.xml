@@ -6,4 +6,5 @@
     <string name="cat_breed_detail_screen_description_lb">Description</string>
     <string name="cat_breed_detail_screen_life_span_lb">Life Span</string>
     <string name="cat_breed_detail_screen_error_lb">Could not load breed details</string>
+    <string name="cat_breed_detail_screen_error_no_images_lb">No images available</string>
 </resources>
