@@ -6,6 +6,7 @@ import androidx.paging.PagingData
 import com.example.catbreeds.datasource.api.CatApiService
 import com.example.catbreeds.datasource.entity.CatBreedOverViewEntity
 import com.example.catbreeds.datasource.entity.CatImageEntity
+import com.example.catbreeds.datasource.entity.ImageSearchFilter
 import com.example.catbreeds.datasource.paging.BreedsPagingSource
 import com.example.catbreeds.datasource.paging.ImagesPagingSource
 import kotlinx.coroutines.flow.Flow
@@ -32,7 +33,16 @@ class CatRepository @Inject constructor(
                 pageSize = 10
             ),
             pagingSourceFactory = {
-                ImagesPagingSource(api, breedId)
+                ImagesPagingSource(api, ImageSearchFilter(breedId = breedId))
+            }
+        ).flow
+    }
+
+    fun searchImages(filter: ImageSearchFilter): Flow<PagingData<CatImageEntity>> {
+        return Pager(
+            config = PagingConfig(pageSize = 20),
+            pagingSourceFactory = {
+                ImagesPagingSource(api, filter)
             }
         ).flow
     }

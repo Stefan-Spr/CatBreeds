@@ -4,21 +4,24 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.example.catbreeds.datasource.api.CatApiService
 import com.example.catbreeds.datasource.entity.CatImageEntity
+import com.example.catbreeds.datasource.entity.ImageSearchFilter
 
 class ImagesPagingSource(
     private val api: CatApiService,
-    private val breedId: String
+    private val filter: ImageSearchFilter
 ) : PagingSource<Int, CatImageEntity>() {
 
     @Suppress("TooGenericExceptionCaught")
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, CatImageEntity> {
         return try {
             val page = params.key ?: 0
-            val limit = params.loadSize
 
-            val images = api.getImagesByBreed(
-                breedId = breedId,
-                limit = limit,
+            val images = api.searchImages(
+                breedId = filter.breedId,
+                categoryId = filter.categoryId,
+                mimeTypes = filter.mimeType,
+                order = filter.order,
+                limit = params.loadSize,
                 page = page
             )
 

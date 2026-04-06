@@ -18,13 +18,17 @@ import com.example.catbreeds.presentation.ui.mapper.mapToState
 fun BreedListOverViewScreen(
     viewModel: CatBreedsViewModel,
     navigateToDetailScreen: (String) -> Unit,
+    navigateToSearchScreen: () -> Unit,
     modifier: Modifier
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier.testTag(stringResource(R.string.test_tag_breed_list))
     ) {
-        HeaderComponent(text = stringResource(R.string.cat_breeds_over_view_screen_title_lb))
+        CatBreedOverViewHeader(
+            text = stringResource(R.string.cat_breeds_over_view_screen_title_lb),
+            navigateToSearchScreen = navigateToSearchScreen
+        )
         val breeds = viewModel.breeds.collectAsLazyPagingItems()
         LazyColumn(
             horizontalAlignment = Alignment.CenterHorizontally,
