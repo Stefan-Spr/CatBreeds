@@ -1,32 +1,31 @@
 package com.example.catbreeds.presentation.ui.screen
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SearchBar
+import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.paging.PagingData
@@ -35,8 +34,8 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
 import com.example.catbreeds.R
 import com.example.catbreeds.datasource.entity.CatImageEntity
-import com.example.catbreeds.datasource.entity.ImageSearchFilter
 import com.example.catbreeds.presentation.CatBreedsViewModel
+import com.example.catbreeds.presentation.ui.states.CatBreedOverViewState
 import com.example.catbreeds.presentation.ui.theme.CatBreedsTheme
 import kotlinx.coroutines.flow.flowOf
 
@@ -46,21 +45,28 @@ fun BreedImageSearchScreen(
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
 ){
+    val query by viewModel.query.collectAsState()
+    val suggestions by viewModel.suggestions.collectAsState(emptyList())
     val images = viewModel.images.collectAsLazyPagingItems()
     BreedImageSearchContent(
+        query = query,
         images = images,
-        onSearch = { breedId ->
-            viewModel.updateFilter(ImageSearchFilter(breedId = breedId))
-        },
+        suggestions = suggestions,
+        onQueryChange = viewModel::onQueryChanged,
+        onSuggestionClick = viewModel::onSuggestionClicked,
         onBackClick = onBackClick,
         modifier = modifier
     )
 }
 
+@Suppress("LongParameterList")
 @Composable
 fun BreedImageSearchContent(
+    query: String,
     images: LazyPagingItems<CatImageEntity>,
-    onSearch: (String) -> Unit,
+    suggestions: List<CatBreedOverViewState>,
+    onQueryChange: (String) -> Unit,
+    onSuggestionClick: (CatBreedOverViewState) -> Unit,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -70,47 +76,64 @@ fun BreedImageSearchContent(
     }
 
     Column (modifier = modifier) {
-        SearchBar(onSearch = onSearch)
+        CatSearchBar(
+            query = query,
+            suggestions = suggestions,
+            onQueryChange = onQueryChange,
+            onSuggestionClick = onSuggestionClick
+        )
         ImageGrid(images)
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchBar(onSearch: (String) -> Unit) {
-    var text by remember { mutableStateOf("") }
-    val focusRequester = remember { FocusRequester() }
-    val keyboardController = LocalSoftwareKeyboardController.current
+fun CatSearchBar(
+    query: String,
+    suggestions: List<CatBreedOverViewState>,
+    onQueryChange: (String) -> Unit,
+    onSuggestionClick: (CatBreedOverViewState) -> Unit
+) {
+    var isExpanded by remember { mutableStateOf(false) }
 
-    OutlinedTextField(
-        value = text,
-        onValueChange = {
-            text = it
-            onSearch(it)
+    SearchBar(
+        inputField = {
+            SearchBarDefaults.InputField(
+                query = query,
+                onQueryChange = onQueryChange,
+                onSearch = { isExpanded = false },
+                expanded = isExpanded,
+                onExpandedChange = { isExpanded = it },
+                placeholder = { Text(stringResource(R.string.cat_breed_search_screen_input_lb)) },
+                leadingIcon = {
+                    Icon(
+                        painterResource(R.drawable.search),
+                        contentDescription = null,
+                        modifier = Modifier.size(25.dp)
+                    )
+                }
+            )
         },
-        label = { Text(stringResource(R.string.cat_breed_search_screen_input_lb)) },
+        expanded = isExpanded,
+        onExpandedChange = { isExpanded = it },
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
-            .focusRequester(focusRequester),
-        shape = CircleShape,
-        singleLine = true,
-        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-        keyboardActions = KeyboardActions(
-            onSearch = {
-                onSearch(text)
-                keyboardController?.hide()
-            }
-        ),
-        trailingIcon = {
-            IconButton(onClick = {
-                onSearch(text)
-                keyboardController?.hide()
-            }) {
-                Icon(painterResource(R.drawable.search), null)
+    ) {
+        LazyColumn {
+            items(suggestions) { breed ->
+                Row(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+                    .clickable {
+                        onSuggestionClick(breed)
+                        isExpanded = false
+                    }) {
+                    Text(text = breed.name)
+                }
             }
         }
-    )
+    }
 }
 
 @Composable
@@ -151,8 +174,11 @@ fun BreedImageSearchScreenPreview() {
 
     CatBreedsTheme {
         BreedImageSearchContent(
+            query = "",
             images = images,
-            onSearch = {},
+            suggestions = emptyList(),
+            onQueryChange = {},
+            onSuggestionClick = {},
             onBackClick = {}
         )
     }

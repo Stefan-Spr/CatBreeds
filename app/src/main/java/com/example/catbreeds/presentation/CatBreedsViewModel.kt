@@ -7,12 +7,17 @@ import com.example.catbreeds.datasource.CatRepository
 import com.example.catbreeds.datasource.entity.ImageSearchFilter
 import com.example.catbreeds.presentation.ui.mapper.mapToState
 import com.example.catbreeds.presentation.ui.states.CatBreedDetailState
+import com.example.catbreeds.presentation.ui.states.CatBreedOverViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,11 +29,10 @@ class CatBreedsViewModel @Inject constructor(
     private val lCatBreedDetailState = MutableStateFlow<CatBreedDetailState?>(null)
     val catBreedDetailState: StateFlow<CatBreedDetailState?> = lCatBreedDetailState
 
-    private val lFilter = MutableStateFlow(ImageSearchFilter())
-    val filter = lFilter.asStateFlow()
+    private val lQuery = MutableStateFlow("")
+    val query = lQuery.asStateFlow()
 
-    val breeds = repository.getBreedsPager()
-        .cachedIn(viewModelScope)
+    private val numberSuggestions: Int = 5
 
     fun getBreedDetails(breedId: String){
         viewModelScope.launch {
@@ -41,14 +45,41 @@ class CatBreedsViewModel @Inject constructor(
             .cachedIn(viewModelScope)
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val images = filter
-        .flatMapLatest { filter ->
-            repository.searchImages(filter)
+    val images = query
+        .flatMapLatest { query ->
+            val breed = breeds.value.find {
+                it.name.equals(query, ignoreCase = true)
+            }
+
+            repository.searchImages(
+                ImageSearchFilter(breedId = breed?.id)
+            )
         }
         .cachedIn(viewModelScope)
 
-    fun updateFilter(newFilter: ImageSearchFilter) {
-        lFilter.value = newFilter
+    fun onQueryChanged(text: String) {
+        lQuery.value = text
+    }
+
+    fun onSuggestionClicked(breed: CatBreedOverViewState) {
+        lQuery.value = breed.name
+    }
+
+    val breeds = repository.getBreeds().map { list -> list.map { it.mapToState() } }
+        .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+
+
+    val suggestions = combine(lQuery, breeds) { query, breeds ->
+        if (query.isBlank()) emptyList()
+        else breeds.filter {
+            it.name.contains(query, ignoreCase = true)
+        }.take(numberSuggestions)
+    }
+
+    init {
+        viewModelScope.launch {
+            repository.refreshBreeds()
+        }
     }
 
 }
